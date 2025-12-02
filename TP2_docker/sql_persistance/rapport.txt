@@ -1,0 +1,52 @@
+$ docker volume create mysql_data : on cree le volume
+
+on lance le conteneur mysql
+$$ docker run -d --name mysql -e MYSQL_ROOT_PASSWORD=root -v mysql_data:/var/lib/mysql mysql:8
+
+# Se connecter au conteneur MySQL
+$ docker exec -it mysql mysql -uroot -proot
+
+-- Créer une base de données
+CREATE DATABASE test_persistence;
+
+-- Utiliser cette base
+USE test_persistence;
+
+-- Créer une table
+CREATE TABLE etudiants (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50),
+    prenom VARCHAR(50),
+    age INT
+);
+
+-- Insérer quelques données
+INSERT INTO etudiants (nom, prenom, age) VALUES 
+('Dupont', 'Jean', 22),
+('Martin', 'Marie', 21),
+('Bernard', 'Paul', 23);
+
+-- Vérifier les données
+SELECT * FROM etudiants;
+
+-- Quitter MySQL
+EXIT;
+
+- on arrete le docker et on le redemarre , on se reconnecte a mysql et on trove que nos donnes sont toujours presentes
+
+- on arrete le conteneur et on le supprime, on lance un noveau en paratageant les données du meme rep donc /var/lib.mysql
+
+$ docker run -d --name mysql2 -e MYSQL_ROOT_PASSWORD=root -v mysql_data:/var/lib/mysql mysql:8
+
+on remarque que nos donnes sont tjr presente malgré la suppression du conteneur
+mysql> select * from etudiants;
++----+---------+--------+------+
+| id | nom     | prenom | age  |
++----+---------+--------+------+
+|  1 | Dupont  | Jean   |   22 |
+|  2 | Martin  | Marie  |   21 |
+|  3 | Bernard | Paul   |   23 |
++----+---------+--------+------+
+3 rows in set (0.03 sec)
+
+
