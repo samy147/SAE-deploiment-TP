@@ -1,0 +1,19 @@
+apiVersion: apps/v1   # Version de l'API Kubernetes utilisée pour le Deployment
+kind: Deployment      # Type de ressource : Deployment (gère la création et la mise à l'échelle des pods)
+metadata:
+  name: nginx-yaml    # Nom du Deployment (unique dans le namespace)
+spec:
+  replicas: 2         # Nombre de réplicas de pods souhaités (ici 2 pods identiques)
+  selector:
+    matchLabels:      # Labels utilisés pour identifier les pods gérés par ce Deployment
+      app: nginx-yaml
+  template:           # Template pour les pods à créer
+    metadata:
+      labels:         # Labels assignés aux pods créés (doivent correspondre au selector ci-dessus)
+        app: nginx-yaml
+    spec:
+      containers:     # Liste des conteneurs dans chaque pod
+      - name: nginx   # Nom du conteneur
+        image: nginx # Image Docker à utiliser pour le conteneur (ici l'image officielle Nginx)
+        ports:       # Ports exposés par le conteneur
+        - containerPort: 80  # Port sur lequel le conteneur écoute à l'intérieur du pod
